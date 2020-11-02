@@ -31,7 +31,6 @@ def find_motifs(sequence, motif):
     for i in range(0, len(sequence) - len(motif)):
         if sequence[i: i + len(motif)] == motif:
             positions.append(i + 1)
-        
     return positions
 
 positions = find_motifs(sequence, motif)

@@ -26,7 +26,6 @@ from scipy.special import binom
 k = 7
 N = 32
 
-
 def foo(k, N):
     def p(n, k):
         return binom(2**k, n) * 0.25**n * 0.75**(2**k - n)

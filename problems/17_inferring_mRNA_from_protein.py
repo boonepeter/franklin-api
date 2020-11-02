@@ -29,7 +29,6 @@ def infer_rna_combinations(protein):
     for p in protein:
         total *= len(protein_to_rna[p])
         total %= 1000000
-
     total *= 3
     total %= 1000000
     return total

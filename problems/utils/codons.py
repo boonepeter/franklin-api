@@ -30,5 +30,12 @@ for k, v in rna_to_protein.items():
         protein_to_rna[v].append(k)
 
 
-
-
+def translate(seq: str):
+    seq = seq.replace("T", "U")
+    protein = ""
+    for i in range(0, len(seq) - 2, 3):
+        aa = rna_to_protein[seq[i: i + 3]]
+        if aa == "Stop":
+            return protein
+        protein += aa
+    return protein

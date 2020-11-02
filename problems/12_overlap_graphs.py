@@ -36,9 +36,7 @@ filename = "./input/rosalind_grph.txt"
 
 def find_adjacent(filename, dist=3):
     fastas = read_fasta(filename)
-
     graphs = []
-
     for k, v in fastas.items():
         for k2, v2 in fastas.items():
             if k == k2:

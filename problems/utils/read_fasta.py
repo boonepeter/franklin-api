@@ -2,9 +2,11 @@
 
 from typing import Dict
 
+from collections import OrderedDict
 
-def read_fasta(filename: str) -> Dict[str, str]:
-    sequences = {}
+
+def read_fasta(filename: str):
+    sequences = OrderedDict()
     with open(filename, "r") as file:
         last = ""
         for f in file.readlines():
@@ -16,8 +18,8 @@ def read_fasta(filename: str) -> Dict[str, str]:
                 sequences[last] += line
     return sequences
 
-def fasta_to_sequence(fasta: str) -> Dict[str, str]:
-    sequences = {}
+def fasta_to_sequence(fasta: str):
+    sequences = OrderedDict()
     last = ""
     for f in fasta.split("\n"):
         line = f.strip()

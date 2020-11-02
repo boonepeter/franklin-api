@@ -48,11 +48,8 @@ from utils.read_fasta import read_fasta
 
 def find_consensus(filename):
     seqs = read_fasta(filename)
-
     seqs = list(seqs.values())
-
     consensus = ""
-
     for i in range(len(seqs[0])):
         counts = {
             "A": 0,

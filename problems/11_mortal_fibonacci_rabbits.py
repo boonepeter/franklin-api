@@ -16,7 +16,7 @@ Sample Output
 4
 """
 
-def mortal_fib(n, m):
+def mortal_fib(n: int, m: int) -> int:
     # Create an array of length m to keep track of the number of rabbits
     ages = [0] * m
     # Start with one rabbit being alive with m months to live
