@@ -57,6 +57,10 @@ You can write the contents of `response.json()["answer"]` to a file, and that sh
 
 ## Testing
 
+
+[![Test Status](https://github.com/boonepeter/franklin-api/workflows/Test/badge.svg)](https://github.com/boonepeter/franklin-api/actions)
+
+
 Run:
 
 ```python
