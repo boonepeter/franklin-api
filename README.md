@@ -1,4 +1,4 @@
-# Rosalind answer API
+# Franklin API
 
 This [FastAPI](https://fastapi.tiangolo.com/) API provides the answers to problems in the [Rosalind](http://rosalind.info/) problem set.
 
