@@ -16,7 +16,6 @@ def levenshtein_distance(seq1: str, seq2: str) -> int:
                 sub_cost = 0
             else:
                 sub_cost = 1
-            
             deletion = dists[i-1][j] + 1
             insertion = dists[i][j -1] + 1
             substitution = dists[i-1][j-1] + sub_cost

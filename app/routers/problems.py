@@ -1645,6 +1645,7 @@ async def infering_protein_from_spectrum(file: UploadFile=File(...)):
     protein = calc_protein(prefix_spectrum)
     return {"answer": protein}
 
+from ..rosalind.trie import build_trie
 
 @router.post("/trie", response_model=Answer, tags=[Tags.graphs, Tags.string_algorithm])
 async def intro_to_pattern_matching(file: UploadFile=File(...)):
@@ -1674,8 +1675,8 @@ async def intro_to_pattern_matching(file: UploadFile=File(...)):
     """
     contents = await file_to_str(file)
     lines = [l.strip() for l in split_str(contents, "\n")]
-
-    return {"answer": ""}
+    trie_lines =  build_trie(lines)
+    return {"answer": "\n".join(i for i in trie_lines)}
 
 from ..rosalind.conv import convolution
 
@@ -1734,7 +1735,7 @@ async def creating_character_table(file: UploadFile=File(...)):
     return {"answer": ""}
 
 
-from ..rosalind.edta import min_edit_distance
+from ..rosalind.edta import edta
 @router.post("/edta", response_model=Answer, tags=[Tags.alignment, Tags.dynamic_programming])
 async def edit_distance_alignment(file: UploadFile=File(...)):
     """
@@ -1751,18 +1752,17 @@ async def edit_distance_alignment(file: UploadFile=File(...)):
     ```
     Sample Output
     ```
-    5
-    PRETT---Y
-    PR-TTEIN-
+    4
+    PRET-TY
+    PRTTEIN
     ```
     Rosalind has this as the sample output, but it is wrong:
-
     4
     PRETTY--
     PR-TTEIN
     """
     seqs = await file_to_seqs(file, 2)
-    num, s1, s2 = min_edit_distance(seqs[0], seqs[1])
+    num, s1, s2 = edta(seqs[0], seqs[1])
     return { "answer": f"{num}\n{s1}\n{s2}"}
 
 from ..rosalind.full import infer_from_full
@@ -2119,6 +2119,90 @@ async def sex_linked_inheritance(file: UploadFile=File(...)):
     return {"answer": " ".join(str(i) for i in females)}
 
 
+from ..rosalind.pcov import perfect_coverage
+
+@router.post("/pcov", response_model=Answer, tags=[Tags.genome_assembly, Tags.graphs])
+async def genome_assembly_with_perfect_coverage(file: UploadFile=File(...)):
+    """
+    Given: A collection of (error-free) DNA k-mers (k≤50) taken from the same strand of a circular chromosome. In this dataset, all k-mers from this strand of the chromosome are present, and their de Bruijn graph consists of exactly one simple cycle.
+
+    Return: A cyclic superstring of minimal length containing the reads (thus corresponding to a candidate cyclic chromosome).
+
+    Sample Dataset
+    ```
+    ATTAC
+    TACAG
+    GATTA
+    ACAGA
+    CAGAT
+    TTACA
+    AGATT
+    ```
+    Sample Output
+    ```
+    CAGATTA
+    ```
+    """
+    contents = await file_to_str(file)
+    lines = split_str(contents, to_strip=True)
+    cov = perfect_coverage(lines)
+    return {"answer": cov}
+
+from ..rosalind.gasm import genome_assembly_from_reads
+
+@router.post("/gasm", response_model=Answer, tags=[Tags.genome_assembly, Tags.graphs])
+async def genome_assembly_using_reads(file: UploadFile=File(...)):
+    """
+    Given: A collection S of (error-free) reads of equal length (not exceeding 50 bp). 
+    In this dataset, for some positive integer k, the de Bruijn graph Bk on Sk+1∪Srck+1 
+    consists of exactly two directed cycles.
+
+    Return: A cyclic superstring of minimal length containing every read or its reverse complement.
+
+    Sample Dataset
+    ```
+    AATCT
+    TGTAA
+    GATTA
+    ACAGA
+    ```
+    Sample Output
+    ```
+    GATTACA
+    ```
+    """
+    contents = await file_to_str(file)
+    seqs = split_str(contents, "\n", to_strip=True)
+    assembly = genome_assembly_from_reads(seqs)
+    return {"answer": assembly}
+
+from ..rosalind.glob import glob_alignment
+
+@router.post("/glob", response_model=Answer, tags=[Tags.alignment, Tags.dynamic_programming])
+async def global_alignment_with_scoring_matrix(file: UploadFile=File(...)):
+    """
+    Given: Two protein strings s and t in FASTA format (each of length at most 1000 aa).
+
+    Return: The maximum alignment score between s and t. Use:
+
+    The BLOSUM62 scoring matrix.
+    Linear gap penalty equal to 5 (i.e., a cost of -5 is assessed for each gap symbol).
+    Sample Dataset
+    ```
+    >Rosalind_67
+    PLEASANTLY
+    >Rosalind_17
+    MEANLY
+    ```
+    Sample Output
+    ```
+    8
+    ```
+    """
+    seqs = await file_to_seqs(file, expected=2)
+    min_dist = glob_alignment(seqs[0], seqs[1])
+    return {"answer": str(min_dist)}
+
 from ..rosalind.wfmd import wright_fisher
 
 '''
@@ -2183,23 +2267,6 @@ async def method(file: UploadFile=File(...)):
     return {"answer": ""}
 
 
-@router.post("/glob", response_model=Answer, tags=[Tags.default])
-async def method(file: UploadFile=File(...)):
-    """
-    """
-    contents = await file_to_str(file)
-
-    return {"answer": ""}
-
-
-@router.post("/pcov", response_model=Answer, tags=[Tags.default])
-async def method(file: UploadFile=File(...)):
-    """
-    """
-    contents = await file_to_str(file)
-
-    return {"answer": ""}
-
 
 @router.post("/qrt", response_model=Answer, tags=[Tags.default])
 async def method(file: UploadFile=File(...)):
@@ -2238,15 +2305,6 @@ async def method(file: UploadFile=File(...)):
 
 
 @router.post("/eubt", response_model=Answer, tags=[Tags.default])
-async def method(file: UploadFile=File(...)):
-    """
-    """
-    contents = await file_to_str(file)
-
-    return {"answer": ""}
-
-
-@router.post("/gasm", response_model=Answer, tags=[Tags.default])
 async def method(file: UploadFile=File(...)):
     """
     """
